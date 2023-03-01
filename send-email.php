@@ -2,6 +2,7 @@
 
 $name = $_POST["name"];
 $email = $_POST["email"];
+$tag1 = $_POST['tag1'];
 $subject = $_POST["subject"];
 $message = $_POST["message"];
 $AttachFile = $_POST["attachment"];
@@ -32,8 +33,8 @@ try{
     $mail->isSMTP();
     $mail->Host = "smtp.gmail.com";
     $mail->SMTPAuth = true;
-    $mail->Username = "natyada.pr@mail.wu.ac.th";
-    $mail->Password = "1900101332181";
+    $mail->Username = "hatarriza@gmail.com";
+    $mail->Password = "ghwnwzlbwbazahvb";
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     
@@ -41,16 +42,28 @@ try{
     
     $mail->setFrom($email, $name);
     //$mail->addAddress("dave@example.com", "Dave");
-    $mail->addAddress($email); 
+    $mail->addAddress($email);
+    $mail->addAddress($tag1, 'Tag1');
+    // $mail->addAddress($tag2, 'Tag2');
+    // $mail->addAddress($tag3, 'Tag3');
+
     
     $mail->isHTML(true);
     $mail->Subject = $subject;
     $mail->Body = $message;
+    //$mail->SMTPDebug = 2;
     // $mail->addAttachment('../../Desktop/pict/' . $AttachFile . '', "$AttachFile");
+
+    if (isset($_FILES['attachment']) && !empty($_FILES['attachment']['name'])) {
+        // Add the attachment
+        $attachment_path = $_FILES['attachment']['tmp_name'];
+        $attachment_name = $_FILES['attachment']['name'];
+        $mail->addAttachment($attachment_path, $attachment_name);
+    }
     
     $mail->send();
     
-    header("Location: sent.html");
+    header("Location: sent.php");
 
 }catch(exception $e){
     echo 'error :'.$e->getMessage().'<br/>';
